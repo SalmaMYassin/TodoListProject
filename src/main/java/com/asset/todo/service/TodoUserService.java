@@ -5,9 +5,9 @@ import com.asset.todo.model.TodoUser;
 import java.util.List;
 
 public interface TodoUserService {
-    TodoUser saveTodoUser(TodoUser user);
+    TodoUser save(TodoUser user);
 
-    TodoUser getTodoUser(String username);
+    TodoUser get(String username);
 
-    List<TodoUser> getTodoUsers();
+    List<TodoUser> getAll();
 }

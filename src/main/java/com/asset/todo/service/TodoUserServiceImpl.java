@@ -18,19 +18,19 @@ public class TodoUserServiceImpl implements TodoUserService {
     private final TodoUserRepository todoUserRepository;
 
     @Override
-    public TodoUser saveTodoUser(TodoUser user) {
+    public TodoUser save(TodoUser user) {
         log.info("saving new user: {}", user.getUsername());
         return todoUserRepository.save(user);
     }
 
     @Override
-    public TodoUser getTodoUser(String username) {
+    public TodoUser get(String username) {
         log.info("getting user by username: {}", username);
         return todoUserRepository.findByUsername(username);
     }
 
     @Override
-    public List<TodoUser> getTodoUsers() {
+    public List<TodoUser> getAll() {
         log.info("fetching all users...");
         return todoUserRepository.findAll();
     }

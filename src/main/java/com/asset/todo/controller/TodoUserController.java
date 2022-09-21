@@ -19,17 +19,17 @@ public class TodoUserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<TodoUser>> getTodoUsers() {
-        return ResponseEntity.ok().body(todoUserService.getTodoUsers());
+        return ResponseEntity.ok().body(todoUserService.getAll());
     }
 
     @GetMapping("/user/{username}")
     public ResponseEntity<TodoUser> getTodoUser(@PathVariable String username) {
-        return ResponseEntity.ok().body(todoUserService.getTodoUser(username));
+        return ResponseEntity.ok().body(todoUserService.get(username));
     }
 
     @PostMapping("/user/save")
     public ResponseEntity<TodoUser> saveTodoUsers(@RequestBody TodoUser todoUser) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(todoUserService.saveTodoUser(todoUser));
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/user/save").toUriString());
+        return ResponseEntity.created(uri).body(todoUserService.save(todoUser));
     }
 }

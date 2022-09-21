@@ -23,12 +23,12 @@ public class TodoApplication {
         return args -> {
 
             TodoUser todoUser = new TodoUser(null, "Salma Yassin", "salma", "salma");
-            todoUserService.saveTodoUser(todoUser);
+            todoUserService.save(todoUser);
 
-            todoItemService.saveTodoItem(new TodoItem(null, "Backend Assessment", "A Todo List", false, todoUser));
-            todoItemService.saveTodoItem(new TodoItem(null, "Get Milk", "", false, todoUser));
-            todoItemService.saveTodoItem(new TodoItem(null, "Make Dinner", "Roast Beef", false, todoUser));
-            todoItemService.saveTodoItem(new TodoItem(null, "Have Fun", "foo", false, todoUser));
+            todoItemService.save(new TodoItem(null, "Backend Assessment", "A Todo List", false, todoUser));
+            todoItemService.save(new TodoItem(null, "Get Milk", "", false, todoUser));
+            todoItemService.save(new TodoItem(null, "Make Dinner", "Roast Beef", false, todoUser));
+            todoItemService.save(new TodoItem(null, "Have Fun", "foo", false, todoUser));
         };
     }
 
