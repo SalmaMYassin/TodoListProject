@@ -1,9 +1,10 @@
-package com.asset.todo.domain;
+package com.asset.todo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ public class TodoUser {
     @GeneratedValue
     private Long id;
     private String name;
+    @Column(unique = true)
     private String username;
     private String password;
 }

@@ -1,6 +1,6 @@
 package com.asset.todo.service;
 
-import com.asset.todo.domain.TodoUser;
+import com.asset.todo.model.TodoUser;
 
 import java.util.List;
 

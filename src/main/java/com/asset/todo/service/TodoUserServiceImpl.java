@@ -1,14 +1,9 @@
 package com.asset.todo.service;
 
-import com.asset.todo.domain.TodoUser;
+import com.asset.todo.model.TodoUser;
 import com.asset.todo.repository.TodoUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +14,7 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class TodoUserServiceImpl implements TodoUserService {
+
     private final TodoUserRepository todoUserRepository;
 
     @Override
@@ -38,6 +34,4 @@ public class TodoUserServiceImpl implements TodoUserService {
         log.info("fetching all users...");
         return todoUserRepository.findAll();
     }
-
-
 }

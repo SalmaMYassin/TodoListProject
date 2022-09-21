@@ -1,11 +1,9 @@
-package com.asset.todo.api;
+package com.asset.todo.controller;
 
-import com.asset.todo.domain.TodoUser;
+import com.asset.todo.model.TodoUser;
 import com.asset.todo.service.TodoUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -13,9 +11,10 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/todo")
 @RequiredArgsConstructor
-public class TodoUserResource {
+public class TodoUserController {
+
     private final TodoUserService todoUserService;
 
     @GetMapping("/users")
