@@ -55,9 +55,9 @@ public class TodoItemController {
     }
 
     @PutMapping("/item/done/{id}")
-    public ResponseEntity<TodoItem> markAsDone(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<TodoItem> updateDone(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/item/done").toUriString());
-        return ResponseEntity.created(uri).body(todoItemService.markAsDone(id));
+        return ResponseEntity.created(uri).body(todoItemService.updateDone(id));
     }
 
     @GetMapping("/items")

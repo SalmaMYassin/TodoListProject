@@ -3,16 +3,16 @@ package com.asset.todo.service;
 import com.asset.todo.model.TodoItem;
 import com.asset.todo.model.TodoUser;
 import com.asset.todo.repository.TodoItemRepository;
+import com.asset.todo.repository.TodoUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +21,17 @@ import java.util.Optional;
 @Slf4j
 public class TodoItemServiceImpl implements TodoItemService {
     private final TodoItemRepository todoItemRepository;
+    private final TodoUserRepository todoUserRepository;
 
 
     @Override
     public TodoItem save(TodoItem item) {
         log.info("saving new todo item: {}", item.getTitle());
+        if (item.getTodoUser() == null) {
+            TodoUser user = todoUserRepository.findByUsername(
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+            item.setTodoUser(user);
+        }
         return todoItemRepository.save(item);
     }
 
@@ -57,7 +63,7 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public TodoItem markAsDone(Long id) throws ChangeSetPersister.NotFoundException {
+    public TodoItem updateDone(Long id) throws ChangeSetPersister.NotFoundException {
         TodoItem item = todoItemRepository.findById(id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         item.setDone(!item.getDone());
