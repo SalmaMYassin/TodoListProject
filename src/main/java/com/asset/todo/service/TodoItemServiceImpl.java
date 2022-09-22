@@ -6,6 +6,9 @@ import com.asset.todo.repository.TodoItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,9 +36,9 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public List<TodoItem> getAllByUsername(String username) {
+    public Page<TodoItem> getAll(int page, int size) {
         log.info("fetching all items...");
-        return todoItemRepository.findAllByTodoUserUsername(username);
+        return todoItemRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
@@ -59,6 +62,11 @@ public class TodoItemServiceImpl implements TodoItemService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         item.setDone(!item.getDone());
         return todoItemRepository.save(item);
+    }
+
+    @Override
+    public Page<TodoItem> getAllByDone(Boolean done, int page, int size) {
+        return todoItemRepository.findAllByDone(done, PageRequest.of(page, size));
     }
 
 }

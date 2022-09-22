@@ -5,7 +5,9 @@ import com.asset.todo.model.TodoUser;
 import com.asset.todo.service.TodoItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,11 @@ public class TodoItemController {
 
     private final TodoItemService todoItemService;
 
-    @GetMapping("/items")
-    public ResponseEntity<List<TodoItem>> getAll() {
-        return ResponseEntity.ok().body(todoItemService
-                .getAllByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()));
-    }
+//    @GetMapping("/items")
+//    public ResponseEntity<List<TodoItem>> getAll() {
+//        return ResponseEntity.ok().body(todoItemService
+//                .getAllByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()));
+//    }
 
     @GetMapping("/item/{id}")
     public ResponseEntity<TodoItem> get(@PathVariable Long id) {
@@ -56,5 +58,14 @@ public class TodoItemController {
     public ResponseEntity<TodoItem> markAsDone(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/item/done").toUriString());
         return ResponseEntity.created(uri).body(todoItemService.markAsDone(id));
+    }
+
+    @GetMapping("/items")
+    public Page<TodoItem> getItemsByDone(@RequestParam(name = "done") @Nullable Boolean done, @RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "size", defaultValue = "4") int size) {
+        if(done != null) {
+            return todoItemService.getAllByDone(done, page, size);
+        } else
+            return todoItemService.getAll(page,size);
     }
 }
