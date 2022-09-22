@@ -1,6 +1,7 @@
 package com.asset.todo.service;
 
 import com.asset.todo.model.TodoItem;
+import com.asset.todo.model.TodoUser;
 import com.asset.todo.repository.TodoItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +33,9 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public List<TodoItem> getAll() {
+    public List<TodoItem> getAllByUsername(String username) {
         log.info("fetching all items...");
-        return todoItemRepository.findAll();
+        return todoItemRepository.findAllByTodoUserUsername(username);
     }
 
     @Override

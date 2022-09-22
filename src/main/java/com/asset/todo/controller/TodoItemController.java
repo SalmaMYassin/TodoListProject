@@ -6,6 +6,8 @@ import com.asset.todo.service.TodoItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,7 +24,8 @@ public class TodoItemController {
 
     @GetMapping("/items")
     public ResponseEntity<List<TodoItem>> getAll() {
-        return ResponseEntity.ok().body(todoItemService.getAll());
+        return ResponseEntity.ok().body(todoItemService
+                .getAllByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()));
     }
 
     @GetMapping("/item/{id}")

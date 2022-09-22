@@ -1,6 +1,7 @@
 package com.asset.todo.service;
 
 import com.asset.todo.model.TodoItem;
+import com.asset.todo.model.TodoUser;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface TodoItemService {
 
     Optional<TodoItem> get(Long id);
 
-    List<TodoItem> getAll();
+    List<TodoItem> getAllByUsername(String username);
 
     void delete(Long id);
 
