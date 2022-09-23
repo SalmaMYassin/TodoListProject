@@ -6,8 +6,6 @@ import com.asset.todo.repository.TodoItemRepository;
 import com.asset.todo.repository.TodoUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.beans.PropertyDescriptor;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

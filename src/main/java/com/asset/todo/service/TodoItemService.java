@@ -4,8 +4,6 @@ import com.asset.todo.model.TodoItem;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
-
 public interface TodoItemService {
 
     TodoItem save(TodoItem item);
