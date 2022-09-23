@@ -21,7 +21,6 @@ public class TodoApplication {
     @Bean
     CommandLineRunner run(TodoUserService todoUserService, TodoItemService todoItemService) {
         return args -> {
-
             TodoUser todoUser = new TodoUser(null, "Salma Yassin", "salma", "salma",null);
             TodoUser todoUser2 = new TodoUser(null, "Mohamed Wael", "wael", "wael",null);
             todoUserService.save(todoUser);

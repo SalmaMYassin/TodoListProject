@@ -1,7 +1,7 @@
 package com.asset.todo.security;
 
-import com.asset.todo.filters.JwtAuthenticationFilter;
-import com.asset.todo.filters.JwtAuthorizationFilter;
+import com.asset.todo.filter.JwtAuthenticationFilter;
+import com.asset.todo.filter.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
