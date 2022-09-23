@@ -31,7 +31,7 @@ public class TodoUserController {
     }
 
     //  Save a user
-    @PostMapping("/user/save")
+    @PostMapping("/user/register")
     public ResponseEntity<TodoUser> save(@RequestBody TodoUser todoUser) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/user/save").toUriString());
         return ResponseEntity.created(uri).body(todoUserService.save(todoUser));

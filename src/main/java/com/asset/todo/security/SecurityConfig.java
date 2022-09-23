@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests().antMatchers("/todo/login/**","/todo/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers("/todo/user/register/**").permitAll();
         http.authorizeRequests().antMatchers("/todo/**").authenticated();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(JWTAuthorizationFilter);
