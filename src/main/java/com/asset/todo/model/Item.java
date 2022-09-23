@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TodoItem {
+public class Item {
     @Id
     @GeneratedValue
     private Long id;
@@ -22,5 +22,5 @@ public class TodoItem {
     private Boolean done = Boolean.FALSE;
     @NotNull
     @ManyToOne
-    private TodoUser todoUser;
+    private User user;
 }

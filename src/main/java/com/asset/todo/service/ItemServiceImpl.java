@@ -1,9 +1,9 @@
 package com.asset.todo.service;
 
-import com.asset.todo.model.TodoItem;
-import com.asset.todo.model.TodoUser;
-import com.asset.todo.repository.TodoItemRepository;
-import com.asset.todo.repository.TodoUserRepository;
+import com.asset.todo.model.Item;
+import com.asset.todo.model.User;
+import com.asset.todo.repository.ItemRepository;
+import com.asset.todo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -19,46 +19,46 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class TodoItemServiceImpl implements TodoItemService {
-    private final TodoItemRepository todoItemRepository;
-    private final TodoUserRepository todoUserRepository;
+public class ItemServiceImpl implements ItemService {
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
 
     @Override
-    public TodoItem save(TodoItem item) {
+    public Item save(Item item) {
         log.info("saving new todo item: {}", item.getTitle());
-        if (item.getTodoUser() == null) {
-            TodoUser user = todoUserRepository.findByUsername(
+        if (item.getUser() == null) {
+            User user = userRepository.findByUsername(
                     SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-            item.setTodoUser(user);
+            item.setUser(user);
         }
-        return todoItemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Override
-    public TodoItem getByIdAndTodoUserUsername(Long id) {
+    public Item getById(Long id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         log.info("getting todo item with id: {}", id);
-        return todoItemRepository.findByIdAndTodoUserUsername(id, username);
+        return itemRepository.findByIdAndUserUsername(id, username);
     }
 
     @Override
-    public Page<TodoItem> getAllByTodoUserUsername(int page, int size) {
+    public Page<Item> getAll(int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         log.info("fetching all items for user {}: ...", username);
-        return todoItemRepository.findAllByTodoUserUsername(username, PageRequest.of(page, size));
+        return itemRepository.findAllByUserUsername(username, PageRequest.of(page, size));
     }
 
     @Override
     public void delete(Long id) {
-        TodoItem item = getItem(id);
+        Item item = getItem(id);
         log.info("deleting item: {}", item.getTitle());
-        todoItemRepository.deleteById(item.getId());
+        itemRepository.deleteById(item.getId());
     }
 
     @Override
-    public TodoItem update(Long id, TodoItem updatedItem) throws ChangeSetPersister.NotFoundException {
-        TodoItem item = getItem(id);
+    public Item update(Long id, Item updatedItem) throws ChangeSetPersister.NotFoundException {
+        Item item = getItem(id);
 
         if (updatedItem.getTitle() != null) {
             log.info("updating title to: {}", updatedItem.getTitle());
@@ -69,26 +69,26 @@ public class TodoItemServiceImpl implements TodoItemService {
             item.setDescription(updatedItem.getDescription());
         }
 
-        return todoItemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Override
-    public TodoItem updateDone(Long id) throws ChangeSetPersister.NotFoundException {
-        TodoItem item = getItem(id);
+    public Item updateDone(Long id) throws ChangeSetPersister.NotFoundException {
+        Item item = getItem(id);
         item.setDone(!item.getDone());
         log.info("updating done from {} to {}", item.getDone(), !item.getDone());
-        return todoItemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Override
-    public Page<TodoItem> getAllByDone(Boolean done, int page, int size) {
+    public Page<Item> getAllByDone(Boolean done, int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return todoItemRepository.findAllByDoneAndTodoUserUsername(done, username, PageRequest.of(page, size));
+        return itemRepository.findAllByDoneAndUserUsername(done, username, PageRequest.of(page, size));
     }
 
     @Override
-    public TodoItem getItem(Long id) {
-        TodoItem item = getByIdAndTodoUserUsername(id);
+    public Item getItem(Long id) {
+        Item item = getById(id);
         if (item == null) {
             log.error("Item not found");
             throw new UsernameNotFoundException("Item: " + id + " is not found");

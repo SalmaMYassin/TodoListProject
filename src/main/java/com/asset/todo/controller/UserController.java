@@ -1,7 +1,7 @@
 package com.asset.todo.controller;
 
-import com.asset.todo.model.TodoUser;
-import com.asset.todo.service.TodoUserService;
+import com.asset.todo.model.User;
+import com.asset.todo.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,28 +12,28 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping("/todo")
+@RequestMapping("/api")
 @RequiredArgsConstructor
-public class TodoUserController {
+public class UserController {
 
-    private final TodoUserService todoUserService;
+    private final UserService userService;
 
     //  Get all users
     @GetMapping("/users")
-    public ResponseEntity<List<TodoUser>> getAll() {
-        return ResponseEntity.ok().body(todoUserService.getAll());
+    public ResponseEntity<List<User>> getAll() {
+        return ResponseEntity.ok().body(userService.getAll());
     }
 
     //  Get user
     @GetMapping("/user/{username}")
-    public ResponseEntity<TodoUser> get(@PathVariable String username) {
-        return ResponseEntity.ok().body(todoUserService.get(username));
+    public ResponseEntity<User> get(@PathVariable String username) {
+        return ResponseEntity.ok().body(userService.get(username));
     }
 
     //  Save a user
     @PostMapping("/user/register")
-    public ResponseEntity<TodoUser> save(@RequestBody TodoUser todoUser) {
+    public ResponseEntity<User> save(@RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/user/save").toUriString());
-        return ResponseEntity.created(uri).body(todoUserService.save(todoUser));
+        return ResponseEntity.created(uri).body(userService.save(user));
     }
 }

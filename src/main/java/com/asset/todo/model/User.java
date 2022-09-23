@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TodoUser {
+public class User {
     @Id
     @GeneratedValue
     private Long id;
@@ -29,6 +29,6 @@ public class TodoUser {
     private String password;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "todoUser", cascade = CascadeType.ALL)
-    List<TodoItem> todoItems = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Item> items = new ArrayList<>();
 }

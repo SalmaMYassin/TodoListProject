@@ -36,14 +36,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter JWTAuthorizationFilter = new JwtAuthenticationFilter(
                 authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)));
-        JWTAuthorizationFilter.setFilterProcessesUrl("/todo/login");
+        JWTAuthorizationFilter.setFilterProcessesUrl("/api/login");
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().antMatchers("/todo/login/**","/todo/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers("/todo/user/register/**").permitAll();
-        http.authorizeRequests().antMatchers("/todo/**").authenticated();
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/api/login/**","/todo/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/user/register/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/**").authenticated();
+//        http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(JWTAuthorizationFilter);
         return http.build();
 

@@ -1,11 +1,10 @@
 package com.asset.todo.service;
 
-import com.asset.todo.model.TodoUser;
-import com.asset.todo.repository.TodoUserRepository;
+import com.asset.todo.model.User;
+import com.asset.todo.repository.UserRepository;
 import com.asset.todo.security.JwtUtilities;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,37 +18,37 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class TodoUserServiceImpl implements TodoUserService, UserDetailsService {
-    private final TodoUserRepository todoUserRepository;
+public class UserServiceImpl implements UserService, UserDetailsService {
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        TodoUser todoUser = todoUserRepository.findByUsername(username);
-        if (todoUser == null) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
             log.error("User not found in the DB");
             throw new UsernameNotFoundException("User: " + username + " is not found");
         } else{
-            return new User(todoUser.getUsername(), todoUser.getPassword(), JwtUtilities.getAuthorities());
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), JwtUtilities.getAuthorities());
         }
     }
 
     @Override
-    public TodoUser save(TodoUser user) {
+    public User save(User user) {
         log.info("saving new user: {}", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return todoUserRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
-    public TodoUser get(String username) {
+    public User get(String username) {
         log.info("getting user by username: {}", username);
-        return todoUserRepository.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public List<TodoUser> getAll() {
+    public List<User> getAll() {
         log.info("fetching all users...");
-        return todoUserRepository.findAll();
+        return userRepository.findAll();
     }
 }
