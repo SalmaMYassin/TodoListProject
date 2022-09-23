@@ -1,10 +1,12 @@
 package com.asset.todo.filters;
 
+import com.asset.todo.security.JwtUtilities;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,25 +30,19 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
-public class JWTAuthorizationFilter extends OncePerRequestFilter {
+@RequiredArgsConstructor
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/todo/login")||request.getServletPath().equals("/todo/token/refresh"))
             filterChain.doFilter(request, response);
         else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            if (JwtUtilities.verifyAuthorizationHeader(authorizationHeader)) {
                 try {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes(StandardCharsets.UTF_8));
-                    JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-                    DecodedJWT decodedJWT = jwtVerifier.verify(token);
-                    String username = decodedJWT.getSubject();
-                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    String token = JwtUtilities.getTokenFromHeader(authorizationHeader);
+                    JwtUtilities.addUserTokenInSecurityContext(JwtUtilities.verifyAndDecodeJWT(token));
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
                     log.error("Error logging in: {}", e.getMessage());

@@ -12,6 +12,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,58 +42,64 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public Optional<TodoItem> get(Long id) {
+    public TodoItem getByIdAndTodoUserUsername(Long id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         log.info("getting todo item with id: {}", id);
-        return todoItemRepository.findById(id);
+        return todoItemRepository.findByIdAndTodoUserUsername(id, username);
     }
 
     @Override
-    public Page<TodoItem> getAll(int page, int size) {
-        log.info("fetching all items...");
-        return todoItemRepository.findAll(PageRequest.of(page, size));
+    public Page<TodoItem> getAllByTodoUserUsername(int page, int size) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        log.info("fetching all items for user {}: ...", username);
+        return todoItemRepository.findAllByTodoUserUsername(username, PageRequest.of(page, size));
     }
 
     @Override
     public void delete(Long id) {
-        todoItemRepository.delete(todoItemRepository.getReferenceById(id));
+        TodoItem item = getItem(id);
+        log.info("deleting item: {}", item.getTitle());
+        todoItemRepository.deleteById(item.getId());
     }
 
     @Override
     public TodoItem update(Long id, TodoItem updatedItem) throws ChangeSetPersister.NotFoundException {
-        TodoItem item = todoItemRepository.findById(id)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        TodoItem item = getItem(id);
 
-        if(updatedItem.getTitle() != null)
+        if (updatedItem.getTitle() != null) {
+            log.info("updating title to: {}", updatedItem.getTitle());
             item.setTitle(updatedItem.getTitle());
-        if(updatedItem.getDescription() != null)
+        }
+        if (updatedItem.getDescription() != null) {
+            log.info("updating description to: {}", updatedItem.getDescription());
             item.setDescription(updatedItem.getDescription());
+        }
 
         return todoItemRepository.save(item);
     }
 
     @Override
     public TodoItem updateDone(Long id) throws ChangeSetPersister.NotFoundException {
-        TodoItem item = todoItemRepository.findById(id)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        TodoItem item = getItem(id);
         item.setDone(!item.getDone());
+        log.info("updating done from {} to {}", item.getDone(), !item.getDone());
         return todoItemRepository.save(item);
     }
 
     @Override
     public Page<TodoItem> getAllByDone(Boolean done, int page, int size) {
-        return todoItemRepository.findAllByDone(done, PageRequest.of(page, size));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return todoItemRepository.findAllByDoneAndTodoUserUsername(done, username, PageRequest.of(page, size));
     }
 
-    public static String[] getNullPropertyNames (Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for(PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
+    @Override
+    public TodoItem getItem(Long id) {
+        TodoItem item = getByIdAndTodoUserUsername(id);
+        if (item == null) {
+            log.error("Item not found");
+            throw new UsernameNotFoundException("Item: " + id + " is not found");
         }
-        return emptyNames.toArray(new String[0]);
+        return item;
     }
 
 }

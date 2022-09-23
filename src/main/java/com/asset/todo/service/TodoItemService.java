@@ -10,9 +10,9 @@ public interface TodoItemService {
 
     TodoItem save(TodoItem item);
 
-    Optional<TodoItem> get(Long id);
+    TodoItem getByIdAndTodoUserUsername(Long id);
 
-    Page<TodoItem> getAll(int page, int size);
+    Page<TodoItem> getAllByTodoUserUsername(int page, int size);
 
     void delete(Long id);
 
@@ -21,4 +21,6 @@ public interface TodoItemService {
     TodoItem updateDone(Long id) throws ChangeSetPersister.NotFoundException;
 
     Page<TodoItem> getAllByDone(Boolean done, int page, int size);
+
+    TodoItem getItem(Long id);
 }

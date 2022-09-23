@@ -1,11 +1,10 @@
 package com.asset.todo.security;
 
-import com.asset.todo.filters.JWTAuthenticationFilter;
-import com.asset.todo.filters.JWTAuthorizationFilter;
+import com.asset.todo.filters.JwtAuthenticationFilter;
+import com.asset.todo.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -35,23 +34,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JWTAuthenticationFilter JWTAuthorizationFilter = new JWTAuthenticationFilter(
+        JwtAuthenticationFilter JWTAuthorizationFilter = new JwtAuthenticationFilter(
                 authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)));
         JWTAuthorizationFilter.setFilterProcessesUrl("/todo/login");
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests().antMatchers("/todo/login/**","/todo/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers("/todo/**").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/todo/**").authenticated();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(JWTAuthorizationFilter);
         return http.build();
-
-//        return http.csrf().disable()
-//                .authorizeRequests(auth -> auth.anyRequest().permitAll())
-//                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .build();
 
     }
 

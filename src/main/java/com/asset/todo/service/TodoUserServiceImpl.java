@@ -2,6 +2,7 @@ package com.asset.todo.service;
 
 import com.asset.todo.model.TodoUser;
 import com.asset.todo.repository.TodoUserRepository;
+import com.asset.todo.security.JwtUtilities;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,9 +33,7 @@ public class TodoUserServiceImpl implements TodoUserService, UserDetailsService 
             log.error("User not found in the DB");
             throw new UsernameNotFoundException("User: " + username + " is not found");
         } else{
-            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            return new User(todoUser.getUsername(), todoUser.getPassword(), authorities);
+            return new User(todoUser.getUsername(), todoUser.getPassword(), JwtUtilities.getAuthorities());
         }
     }
 

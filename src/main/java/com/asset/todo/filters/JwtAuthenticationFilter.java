@@ -1,5 +1,6 @@
 package com.asset.todo.filters;
 
+import com.asset.todo.security.JwtUtilities;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
@@ -38,20 +39,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)  {
         User user = (User) authResult.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes(StandardCharsets.UTF_8));
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
 
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-
-        response.setHeader("authorization", access_token);
-        response.setHeader("refresh_token", refresh_token);
+        response.setHeader("authorization", JwtUtilities.generateAccessToken(user.getUsername(),request.getRequestURL().toString()));
+        response.setHeader("refresh_token", JwtUtilities.generateRefreshToken(user.getUsername(),request.getRequestURL().toString()));
     }
 }

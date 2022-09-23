@@ -1,21 +1,16 @@
 package com.asset.todo.controller;
 
 import com.asset.todo.model.TodoItem;
-import com.asset.todo.model.TodoUser;
 import com.asset.todo.service.TodoItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/todo")
@@ -24,48 +19,51 @@ public class TodoItemController {
 
     private final TodoItemService todoItemService;
 
-//    @GetMapping("/items")
-//    public ResponseEntity<List<TodoItem>> getAll() {
-//        return ResponseEntity.ok().body(todoItemService
-//                .getAllByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()));
-//    }
-
+    //  Get Item by Id
     @GetMapping("/item/{id}")
     public ResponseEntity<TodoItem> get(@PathVariable Long id) {
-        Optional<TodoItem> todoItem = todoItemService.get(id);
-        return todoItem.map(item -> ResponseEntity.ok().body(item)).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok().body(todoItemService.getItem(id));
     }
 
+    //  Get All Items for user
+    //  If done filter is passed in the parameters filter by it
+    @GetMapping("/items")
+    public Page<TodoItem> getItemsByDone(@RequestParam(name = "done") @Nullable Boolean done,
+                                         @RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "size", defaultValue = "4") int size) {
+        if (done != null) {
+            return todoItemService.getAllByDone(done, page, size);
+        } else
+            return todoItemService.getAllByTodoUserUsername(page, size);
+    }
+
+    //  Save an Item
     @PostMapping("/item/save")
     public ResponseEntity<TodoItem> save(@RequestBody TodoItem todoItem) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/item/save").toUriString());
         return ResponseEntity.created(uri).body(todoItemService.save(todoItem));
     }
 
+    //  Delete an item
     @DeleteMapping("/item/{id}")
     public ResponseEntity<TodoItem> delete(@PathVariable Long id) {
         todoItemService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    //  Update an item
     @PutMapping("/item/update/{id}")
-    public ResponseEntity<TodoItem> update(@PathVariable Long id, @RequestBody TodoItem todoItem) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<TodoItem> update(@PathVariable Long id, @RequestBody TodoItem updatedItem) throws ChangeSetPersister.NotFoundException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/item/update").toUriString());
-        return ResponseEntity.created(uri).body(todoItemService.update(id, todoItem));
+        return ResponseEntity.created(uri).body(todoItemService.update(id, updatedItem));
     }
 
+    //  Change done status
     @PutMapping("/item/done/{id}")
     public ResponseEntity<TodoItem> updateDone(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/todo/item/done").toUriString());
         return ResponseEntity.created(uri).body(todoItemService.updateDone(id));
     }
 
-    @GetMapping("/items")
-    public Page<TodoItem> getItemsByDone(@RequestParam(name = "done") @Nullable Boolean done, @RequestParam(name = "page", defaultValue = "0") int page,
-                                         @RequestParam(name = "size", defaultValue = "4") int size) {
-        if(done != null) {
-            return todoItemService.getAllByDone(done, page, size);
-        } else
-            return todoItemService.getAll(page,size);
-    }
+
 }
