@@ -10,10 +10,12 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +41,12 @@ public class ItemServiceImpl implements ItemService {
     public Item getById(Long id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         log.info("getting todo item with id: {}", id);
-        return itemRepository.findByIdAndUserUsername(id, username);
+        Item item = itemRepository.findByIdAndUserUsername(id, username);
+        if (item == null) {
+            log.error("Item not found");
+            throw new ResponseStatusException(NOT_FOUND, "Item with id: " + id + " is not found");
+        }
+        return item;
     }
 
     @Override
@@ -57,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item update(Long id, Item updatedItem) throws ChangeSetPersister.NotFoundException {
+    public Item update(Long id, Item updatedItem) {
         Item item = getById(id);
 
         if (updatedItem.getTitle() != null) {
@@ -73,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item updateDone(Long id) throws ChangeSetPersister.NotFoundException {
+    public Item updateDone(Long id) {
         Item item = getById(id);
         item.setDone(!item.getDone());
         log.info("updating done from {} to {}", item.getDone(), !item.getDone());
