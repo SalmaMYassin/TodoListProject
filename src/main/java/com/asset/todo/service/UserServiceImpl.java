@@ -10,9 +10,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             log.error("User not found in the DB");
             throw new UsernameNotFoundException("User: " + username + " is not found");
-        } else{
+        } else {
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), JwtUtilities.getAuthorities());
         }
     }
@@ -42,8 +46,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User get(String username) {
+        User user = userRepository.findByUsername(username);
         log.info("getting user by username: {}", username);
-        return userRepository.findByUsername(username);
+        if (user == null) {
+            log.error("User not found in the DB");
+            throw new ResponseStatusException(NOT_FOUND, "User: " + username + " is not found");
+        }
+        return user;
     }
 
     @Override
