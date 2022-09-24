@@ -28,7 +28,7 @@ public class ItemController {
     //  Get All Items for user
     //  If done filter is passed in the parameters filter by it
     @GetMapping("/items")
-    public Page<Item> getItemsByDone(@RequestParam(name = "done") @Nullable Boolean done,
+    public Page<Item> getItems(@RequestParam(name = "done") @Nullable Boolean done,
                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                      @RequestParam(name = "size", defaultValue = "4") int size) {
         if (done != null) {
