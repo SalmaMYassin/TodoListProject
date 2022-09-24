@@ -54,7 +54,7 @@ class ItemControllerTest {
 
     @Test
     void get() throws Exception {
-        when(itemService.getItem(1L)).thenReturn(item1);
+        when(itemService.getById(1L)).thenReturn(item1);
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/item/1")
                 .contentType(MediaType.APPLICATION_JSON))

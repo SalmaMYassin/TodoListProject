@@ -51,14 +51,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(Long id) {
-        Item item = getItem(id);
+        Item item = getById(id);
         log.info("deleting item: {}", item.getTitle());
         itemRepository.deleteById(item.getId());
     }
 
     @Override
     public Item update(Long id, Item updatedItem) throws ChangeSetPersister.NotFoundException {
-        Item item = getItem(id);
+        Item item = getById(id);
 
         if (updatedItem.getTitle() != null) {
             log.info("updating title to: {}", updatedItem.getTitle());
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item updateDone(Long id) throws ChangeSetPersister.NotFoundException {
-        Item item = getItem(id);
+        Item item = getById(id);
         item.setDone(!item.getDone());
         log.info("updating done from {} to {}", item.getDone(), !item.getDone());
         return itemRepository.save(item);
@@ -84,16 +84,6 @@ public class ItemServiceImpl implements ItemService {
     public Page<Item> getAllByDone(Boolean done, int page, int size) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return itemRepository.findAllByDoneAndUserUsername(done, username, PageRequest.of(page, size));
-    }
-
-    @Override
-    public Item getItem(Long id) {
-        Item item = getById(id);
-        if (item == null) {
-            log.error("Item not found");
-            throw new UsernameNotFoundException("Item: " + id + " is not found");
-        }
-        return item;
     }
 
 }

@@ -22,7 +22,7 @@ public class ItemController {
     //  Get Item by Id
     @GetMapping("/item/{id}")
     public ResponseEntity<Item> get(@PathVariable Long id) {
-        return ResponseEntity.ok().body(itemService.getItem(id));
+        return ResponseEntity.ok().body(itemService.getById(id));
     }
 
     //  Get All Items for user

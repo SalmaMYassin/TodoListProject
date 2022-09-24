@@ -20,5 +20,4 @@ public interface ItemService {
 
     Page<Item> getAllByDone(Boolean done, int page, int size);
 
-    Item getItem(Long id);
 }
