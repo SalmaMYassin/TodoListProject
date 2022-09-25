@@ -27,7 +27,7 @@ public class TokenController {
         if (JwtUtilities.verifyAuthorizationHeader(authorizationHeader)) {
             try {
                 String refresh_token = JwtUtilities.getTokenFromHeader(authorizationHeader);
-                String username = JwtUtilities.verifyAndDecodeJWT(authorizationHeader).getSubject();
+                String username = JwtUtilities.verifyAndDecodeJWT(refresh_token).getSubject();
 
                 response.setHeader("authorization", JwtUtilities.generateAccessToken(username,
                         request.getRequestURL().toString()));
