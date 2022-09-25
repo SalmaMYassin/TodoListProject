@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -60,6 +62,12 @@ public class ItemServiceImpl implements ItemService {
         Item item = getById(id);
         log.info("deleting item: {}", item.getTitle());
         itemRepository.deleteById(item.getId());
+    }
+
+    @Override
+    public void bulkDelete(List<Long> ids) {
+        log.info("deleting items: {}",ids.stream().unordered());
+        itemRepository.deleteAllById(ids);
     }
 
     @Override

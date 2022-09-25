@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -48,6 +49,13 @@ public class ItemController {
     @DeleteMapping("/item/{id}")
     public ResponseEntity<Item> delete(@PathVariable Long id) {
         itemService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //  Bulk delete items
+    @DeleteMapping("/items/")
+    public ResponseEntity<Item> delete(@RequestBody List<Long> ids) {
+        itemService.bulkDelete(ids);
         return ResponseEntity.noContent().build();
     }
 

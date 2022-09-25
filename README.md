@@ -353,6 +353,20 @@ curl --location --request DELETE 'host.docker.internal:8080/api/item/2' \
 
 status: `204 No Content`
 
+Path: **DELETE
+/api/items**
+
+Example:
+```bash
+curl --location --request DELETE 'host.docker.internal:8080/api/items/' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhaG1lZCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvbG9naW4iLCJleHAiOjE2NjQwNzUyOTN9.xlAPIoSNxRQBLXMOCUsXdR8d1rfxvpV7MzbEv9qpoms' \
+--header 'Content-Type: application/json' \
+--data-raw '[2,5]'
+```
+
+status: `204 No Content`
+
+
 ## Steps:
 1. Register
 2. Login
