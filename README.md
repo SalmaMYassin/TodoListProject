@@ -2,7 +2,7 @@
 
 A Todo List Backend Assignment
 
-## How to run project:
+## To run project:
 
 ```bash
 docker-compose up
