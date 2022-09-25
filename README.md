@@ -7,6 +7,7 @@ A Todo List Backend Assignment
 ```bash
 docker-compose up
 ```
+_ps. make sure port 8080 on your localhost is available_
 
 To see swagger ui documentation go to:
 >http://host.docker.internal:8080/swagger-ui/index.html
