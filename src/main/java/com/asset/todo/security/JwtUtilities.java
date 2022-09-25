@@ -29,7 +29,7 @@ public final class JwtUtilities {
     public static String generateRefreshToken(String username, String issuer) {
         return JWT.create()
                 .withSubject(username)
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .withIssuer(issuer)
                 .sign(algorithm);
     }
