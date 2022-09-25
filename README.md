@@ -359,6 +359,6 @@ status: `204 No Content`
 3. Copy access_token from response body
 4. Add access_token in postman's Authentication type Bearer token to authenticate requests
 
-### Could be improved:
+## Could be improved:
 1. Username and password validation
 2. Increase unit testcases coverage
