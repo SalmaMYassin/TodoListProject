@@ -2,7 +2,7 @@
 
 A Todo List Backend Assignment
 
-##How to run project:
+## How to run project:
 
 ```bash
 docker-compose up
@@ -11,9 +11,9 @@ docker-compose up
 To see swagger ui documentation go to:
 >http://host.docker.internal:8080/swagger-ui/index.html
 
-##Exposed APIs:
+## Exposed APIs:
 
-###User APIs:
+### User APIs:
 
 Path: **POST
 /api/user/register**
@@ -114,7 +114,7 @@ Output:
 }
 ```
 
-###Item APIs:
+### Item APIs:
 
 Path: **POST
 /api/item/save**
@@ -353,12 +353,12 @@ curl --location --request DELETE 'host.docker.internal:8080/api/item/2' \
 
 status: `204 No Content`
 
-##Steps:
+## Steps:
 1. Register
 2. Login
 3. Copy access_token from response body
 4. Add access_token in postman's Authentication type Bearer token to authenticate requests
 
-###Needs to be done:
+### Could be improved:
 1. Username and password validation
 2. Increase unit testcases coverage
