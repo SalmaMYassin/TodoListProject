@@ -13,7 +13,7 @@ import java.util.*;
 
 public final class JwtUtilities {
 
-    private static final String JWT_SECRET = System.getProperty("JWT_SECRET","secret");
+    private static final String JWT_SECRET = System.getProperty("JWT_SECRET", "secret");
     private static final Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
     private static final String BEARER = "Bearer ";
     private static final String USER = "USER";
@@ -60,4 +60,10 @@ public final class JwtUtilities {
         return authorities;
     }
 
+    public static Map<String, String> writeTokens(String access_token, String refresh_token) {
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", access_token);
+        tokens.put("refresh_token", refresh_token);
+        return tokens;
+    }
 }

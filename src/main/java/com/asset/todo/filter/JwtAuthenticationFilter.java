@@ -46,10 +46,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        response.setHeader("authorization", JwtUtilities.generateAccessToken(user.getUsername(),request.getRequestURL().toString()));
 //        response.setHeader("refresh_token", JwtUtilities.generateRefreshToken(user.getUsername(),request.getRequestURL().toString()));
 
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", JwtUtilities.generateAccessToken(user.getUsername(), request.getRequestURL().toString()));
-        tokens.put("refresh_token", JwtUtilities.generateRefreshToken(user.getUsername(), request.getRequestURL().toString()));
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(),
+                JwtUtilities.writeTokens(
+                        JwtUtilities.generateAccessToken(user.getUsername(), request.getRequestURL().toString()),
+                        JwtUtilities.generateRefreshToken(user.getUsername(), request.getRequestURL().toString())));
     }
 }

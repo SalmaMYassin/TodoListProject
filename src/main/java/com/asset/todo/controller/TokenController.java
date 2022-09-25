@@ -29,9 +29,11 @@ public class TokenController {
                 String refresh_token = JwtUtilities.getTokenFromHeader(authorizationHeader);
                 String username = JwtUtilities.verifyAndDecodeJWT(refresh_token).getSubject();
 
-                response.setHeader("authorization", JwtUtilities.generateAccessToken(username,
-                        request.getRequestURL().toString()));
-                response.setHeader("refresh_token", refresh_token);
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(),
+                        JwtUtilities.writeTokens(
+                                JwtUtilities.generateAccessToken(username, request.getRequestURL().toString()),
+                                refresh_token));
             } catch (Exception e) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", e.getMessage());
