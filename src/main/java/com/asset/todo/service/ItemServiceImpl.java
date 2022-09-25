@@ -66,8 +66,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void bulkDelete(List<Long> ids) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         log.info("deleting items: {}",ids.stream().unordered());
-        itemRepository.deleteAllById(ids);
+        itemRepository.deleteAllByIdAndUserUsername(ids, username);
     }
 
     @Override
