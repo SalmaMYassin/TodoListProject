@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().antMatchers("/api/login/**","/todo/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**").permitAll();
         http.authorizeRequests().antMatchers("/api/user/register/**").permitAll();
         http.authorizeRequests().antMatchers("/api/**").authenticated();
 //        http.authorizeRequests().anyRequest().authenticated();
