@@ -23,9 +23,9 @@ Example:
 curl --location --request POST 'host.docker.internal:8080/api/user/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "username":"ahmed",
-    "password":"ahmed",
-    "name":"Ahmed"
+    "username":"salma",
+    "password":"salma",
+    "name":"Salma"
 }'
 ```
 status: `201 Created`
@@ -34,8 +34,8 @@ Output:
 ```json
 {
   "id": 1,
-  "name": "Ahmed",
-  "username": "ahmed"
+  "name": "Salma",
+  "username": "salma"
 }
 ```
 
@@ -70,8 +70,8 @@ Output:
 [
   {
     "id": 1,
-    "name": "Ahmed",
-    "username": "ahmed"
+    "name": "Salma",
+    "username": "salma"
   }
 ]
 ```
@@ -83,7 +83,7 @@ Path: **GET
 
 Example:
 ```bash
-curl --location --request GET 'host.docker.internal:8080/api/user/ahmed' \
+curl --location --request GET 'host.docker.internal:8080/api/user/salma' \
 --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhaG1lZCIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hcGkvbG9naW4iLCJleHAiOjE2NjQwNjUzMTV9.Hlk_ebyoT5VnEZeeINI_GUs7QdTOiH1gvJuG8dprrQs'
 ```
 
@@ -91,8 +91,8 @@ Output:
 ```json
 {
   "id": 1,
-  "name": "Ahmed",
-  "username": "ahmed"
+  "name": "Salma",
+  "username": "salma"
 }
 ```
 
@@ -139,8 +139,8 @@ Output:
   "done": false,
   "user": {
     "id": 1,
-    "name": "Ahmed",
-    "username": "ahmed"
+    "name": "Salma",
+    "username": "salma"
   }
 }
 ```
@@ -167,8 +167,8 @@ Output:
   "done": false,
   "user": {
     "id": 1,
-    "name": "Ahmed",
-    "username": "ahmed"
+    "name": "Salma",
+    "username": "salma"
   }
 }
 ```
@@ -197,8 +197,8 @@ Output:
       "done": false,
       "user": {
         "id": 1,
-        "name": "Ahmed",
-        "username": "ahmed"
+        "name": "Salma",
+        "username": "salma"
       }
     }
   ],
@@ -253,8 +253,8 @@ Output:
   "done": false,
   "user": {
     "id": 1,
-    "name": "Ahmed",
-    "username": "ahmed"
+    "name": "Salma",
+    "username": "salma"
   }
 }
 ```
@@ -277,8 +277,8 @@ Output:
   "done": true,
   "user": {
     "id": 1,
-    "name": "Ahmed",
-    "username": "ahmed"
+    "name": "Salma",
+    "username": "salma"
   }
 }
 ```
@@ -308,8 +308,8 @@ Output:
       "done": true,
       "user": {
         "id": 1,
-        "name": "Ahmed",
-        "username": "ahmed"
+        "name": "Salma",
+        "username": "salma"
       }
     }
   ],
@@ -359,4 +359,6 @@ status: `204 No Content`
 3. Copy access_token from response body
 4. Add access_token in postman's Authentication type Bearer token to authenticate requests
 
-
+###Needs to be done:
+1. Username and password validation
+2. Increase unit testcases coverage
