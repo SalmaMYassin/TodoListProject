@@ -1,6 +1,6 @@
 # TodoListProject
 
-A Todo List Backend Assignment
+A Todo List Backend Project
 
 ## To run project:
 
